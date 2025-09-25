@@ -1,0 +1,31 @@
+#define PIN_LED 7 // ON=0, OFF=1
+
+void setup() {
+  pinMode(PIN_LED, OUTPUT);
+  Serial.begin(115200);
+  while (!Serial) {
+    ; // 시리얼 연결 대기
+  }
+}
+
+void loop() {
+  // 1. LED ON 상태에서 1초간 유지
+  digitalWrite(PIN_LED, 0);  // ON
+  delay(1000);
+
+  // 2. LED 깜빡임 (5회)
+  for (int i = 0; i < 5; i++) {
+    digitalWrite(PIN_LED, 1); // OFF
+    delay(100);
+    digitalWrite(PIN_LED, 0); // ON
+    delay(100);
+  }
+
+  // 3. LED OFF
+  digitalWrite(PIN_LED, 1);
+
+  // 4. 무한루프 (종료)
+  for(;;) {
+    // do nothing
+  }
+}
