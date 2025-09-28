@@ -1,0 +1,49 @@
+#define LED_PIN 7
+#define MAX_DUTY 100
+
+// 현재 주기(us)와 duty(%) 저장
+volatile int current_period = 10000; 
+volatile int current_duty = 0;       
+
+/**
+ * PWM 주기를 설정합니다. (100us ~ 10000us)
+ */
+void set_period(int period) {
+    if (period < 100) current_period = 100;
+    else if (period > 10000) current_period = 10000;
+    else current_period = period;
+}
+
+
+void set_duty(int duty) {
+    if (duty < 0) current_duty = 0;
+    else if (duty > MAX_DUTY) current_duty = MAX_DUTY;
+    else current_duty = duty;
+    
+    long on_time = (long)current_period * current_duty / MAX_DUTY;
+    long off_time = current_period - on_time;
+    
+    digitalWrite(LED_PIN, HIGH);
+    delayMicroseconds(on_time);
+    
+    digitalWrite(LED_PIN, LOW);
+    delayMicroseconds(off_time);
+}
+
+void setup() {
+    pinMode(LED_PIN, OUTPUT);
+    // 10ms 주기로 설정
+    set_period(10000); 
+}
+
+void loop() {
+    // 최소밝기(0)에서 최대밝기(100)로 증가
+    for (int duty = 0; duty <= MAX_DUTY; duty++) {
+        set_duty(duty); 
+    }
+    
+    // 최대밝기(100)에서 최소밝기(0)로 감소
+    for (int duty = MAX_DUTY - 1; duty >= 1; duty--) {
+        set_duty(duty); 
+    }
+}
